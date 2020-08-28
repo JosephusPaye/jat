@@ -46,12 +46,13 @@ import Button from './Button.vue';
 import CloseButton from './CloseButton.vue';
 import TimeInput from './TimeInput.vue';
 
-import { parseTime } from './util.js';
+import { parseTime, formatTime } from './util.js';
 
 export default {
     name: 'ChangeTime',
 
     props: {
+        time: Number,
         show: Boolean,
     },
 
@@ -78,6 +79,15 @@ export default {
         selectedTimeInvalid() {
             return Number.isNaN(parseTime(this.selectedTime));
         },
+    },
+
+    watch: {
+        show(show) {
+            // Set the selected time when the modal is opened
+            if (show) {
+                this.selectedTime = formatTime(this.time);
+            }
+        }
     },
 
     methods: {

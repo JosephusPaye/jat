@@ -13,7 +13,11 @@ export default {
 <style lang="scss">
 .color-scheme-dark .button-group {
     .button {
-        @apply rounded-none border-r border-gray-700;
+        @apply relative rounded-none border-r border-gray-700;
+    }
+
+    .button:focus {
+        z-index: 1;
     }
 
     .button:first-child {

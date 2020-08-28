@@ -43,46 +43,54 @@
                     </Button>
                 </div>
 
-                <ButtonGroup class="mt-4">
-                    <Button @click="toggle">
-                        {{
-                            state === 'stopped'
-                                ? '▶ Start'
-                                : state === 'running'
-                                ? '⏸ Pause'
-                                : '▶ Resume'
-                        }}
-                    </Button>
-                    <Button @click="reset">
-                        🔄 Reset
-                    </Button>
-                    <Settings
-                        :showMilliseconds.sync="timer.showMilliseconds"
-                        :allowOverflow.sync="timer.allowOverflow"
-                        :allowSound.sync="timer.allowSound"
-                    />
-                </ButtonGroup>
+                <div class="flex justify-between mt-4">
+                    <ButtonGroup>
+                        <Button @click="toggle">
+                            {{
+                                state === 'stopped'
+                                    ? '▶ Start'
+                                    : state === 'running'
+                                    ? '⏸ Pause'
+                                    : '▶ Resume'
+                            }}
+                        </Button>
+                        <Button @click="reset">
+                            🔄 Reset
+                        </Button>
+                        <Settings
+                            :showMilliseconds.sync="timer.showMilliseconds"
+                            :allowOverflow.sync="timer.allowOverflow"
+                            :allowSound.sync="timer.allowSound"
+                        />
+                    </ButtonGroup>
 
-                <!-- <div class="flex">
-                    <button class="text-primary" @click="zoomIn">
-                        ➕ Bigger
-                    </button>
-                    <button class="text-primary" @click="zoomOut">
-                        ➖ Smaller
-                    </button>
-                    <button class="text-primary" @click="toggleColorScheme">
-                        {{
-                            view.colorScheme === 'light' ? '🌙 Dark' : '☀ Light'
-                        }}
-                    </button>
-                    <button class="text-primary" @click="toggleFullscreen">
-                        {{ view.isFullscreen ? '↙ Exit' : '↗ Fullscreen' }}
-                    </button>
-                </div> -->
+                    <ButtonGroup class="flex">
+                        <Button @click="zoomIn">
+                            ➕ Bigger
+                        </Button>
+                        <Button @click="zoomOut">
+                            ➖ Smaller
+                        </Button>
+                        <Button @click="toggleColorScheme">
+                            {{
+                                view.colorScheme === 'light'
+                                    ? '🌙 Dark'
+                                    : '☀ Light'
+                            }}
+                        </Button>
+                        <Button @click="toggleFullscreen">
+                            {{ view.isFullscreen ? '↙ Exit' : '↗ Fullscreen' }}
+                        </Button>
+                    </ButtonGroup>
+                </div>
             </div>
         </Timer>
 
-        <ChangeTime :show.sync="showChangeTimeModal" @time="setTime" />
+        <ChangeTime
+            :time="timer.length"
+            :show.sync="showChangeTimeModal"
+            @time="setTime"
+        />
     </div>
 </template>
 
@@ -329,7 +337,7 @@ export default {
     *:focus.focus-visible,
     *:focus.focus-visible + .focus-target {
         outline: none;
-        box-shadow: #4FC3F7 0px 0px 0px 3px;
+        box-shadow: #4fc3f7 0px 0px 0px 3px;
     }
 
     .theme\: {

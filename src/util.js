@@ -1,3 +1,5 @@
+import { getTimeParts } from '@josephuspaye/timer';
+
 const timeFactors = [
   1, // seconds in a second
   60, // seconds in a minute
@@ -18,4 +20,9 @@ export function parseTime(timeString) {
     }, 0);
 
   return totalSeconds * 1000;
+}
+
+export function formatTime(time) {
+  const { h, m, s } = getTimeParts(time);
+  return `${h}:${m}:${s}`;
 }
