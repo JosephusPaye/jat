@@ -18,4 +18,11 @@ export default {
         @apply bg-gray-800;
     }
 }
+
+.color-scheme-light .close-button {
+    &:hover,
+    &:focus {
+        @apply bg-gray-300;
+    }
+}
 </style>

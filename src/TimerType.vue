@@ -10,7 +10,7 @@
                 @input="$emit('input', $event.target.value)"
             />
             <div
-                class="timer-type__button cursor-pointer focus-target border border-r-0 pl-6 pr-4 py-3 leading-none rounded-l-full theme:text-primary theme:text-selects theme:border theme:bg-base theme:bg-highlights theme:bg-selects"
+                class="timer-type__button font-semibold cursor-pointer focus-target border border-r-0 pl-6 pr-4 py-3 leading-none rounded-l-full theme:text-primary theme:text-selects theme:border theme:bg-base theme:bg-highlights theme:bg-selects"
                 :class="[
                     value === 'countdown'
                         ? 'is-selected'
@@ -30,7 +30,7 @@
                 @input="$emit('input', $event.target.value)"
             />
             <div
-                class="timer-type__button cursor-pointer focus-target border border-l-0 pl-4 pr-6 py-3 leading-none rounded-r-full theme:text-primary theme:text-selects theme:border theme:bg-base theme:bg-highlights theme:bg-selects"
+                class="timer-type__button font-semibold cursor-pointer focus-target border border-l-0 pl-4 pr-6 py-3 leading-none rounded-r-full theme:text-primary theme:text-selects theme:border theme:bg-base theme:bg-highlights theme:bg-selects"
                 :class="[
                     value === 'stopwatch'
                         ? 'is-selected'

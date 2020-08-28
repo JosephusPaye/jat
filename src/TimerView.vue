@@ -4,7 +4,7 @@
         :class="{ 'is-overflowed': isOverflowed }"
         :style="{ fontSize: `${zoomFactor * 32}px` }"
     >
-        <div style="font-size: 4em">
+        <div class="leading-none" style="font-size: 4em">
             <span>{{ time.h }}</span>
             <span>:</span>
             <span>{{ time.m }}</span>
@@ -32,7 +32,11 @@ export default {
 </script>
 
 <style>
-.is-overflowed {
+.color-scheme-dark .is-overflowed {
     color: #e91e63 !important;
+}
+
+.color-scheme-light .is-overflowed {
+    color: #F44336 !important;
 }
 </style>

@@ -11,9 +11,9 @@ export default {
 </script>
 
 <style lang="scss">
-.color-scheme-dark .button-group {
+ .button-group {
     .button {
-        @apply relative rounded-none border-r border-gray-700;
+        @apply relative rounded-none border-r;
     }
 
     .button:focus {
@@ -27,6 +27,18 @@ export default {
     .button:last-child,
     *:last-child .button {
         @apply rounded-l-none rounded-r border-r-0;
+    }
+}
+
+.color-scheme-dark .button-group {
+    .button {
+        @apply border-gray-700;
+    }
+}
+
+.color-scheme-light .button-group {
+    .button {
+        @apply border-gray-400;
     }
 }
 </style>

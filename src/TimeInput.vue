@@ -57,4 +57,28 @@ export default {
         }
     }
 }
+
+.color-scheme-light .time-input {
+    input {
+        background-color: rgba(0, 0, 0, 0.05);
+        color:rgba(0, 0, 0, 0.87);
+        @apply border-gray-300;
+
+        &:hover {
+            @apply border-gray-400;
+        }
+
+        &:focus {
+            box-shadow: #4fc3f7 0px 0px 0px 3px;
+        }
+
+        &:focus.is-invalid {
+            box-shadow: #f06292 0px 0px 0px 3px !important;
+        }
+
+        &.is-invalid {
+            @apply border-red-500;
+        }
+    }
+}
 </style>

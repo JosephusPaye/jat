@@ -27,7 +27,7 @@
                         :zoomFactor="view.zoomFactor"
                     />
 
-                    <Button class="mt-4" @click="showChangeTimeModal = true">
+                    <Button class="mt-8" @click="showChangeTimeModal = true">
                         ✏ Change time
                     </Button>
                 </div>
@@ -241,12 +241,6 @@ export default {
     outline: none;
 }
 
-*[class^='theme:'] {
-    transition-property: color, background-color;
-    transition-duration: 0.4s;
-    transition-timing-function: ease-in-out;
-}
-
 .color-scheme-dark {
     *:focus.focus-visible,
     *:focus.focus-visible + .focus-target {
@@ -294,6 +288,57 @@ export default {
 
         &border {
             @apply border-gray-800;
+        }
+    }
+}
+
+.color-scheme-light {
+    *:focus.focus-visible,
+    *:focus.focus-visible + .focus-target {
+        outline: none;
+        box-shadow: #4fc3f7 0px 0px 0px 3px;
+    }
+
+    .theme\: {
+        // The base background color
+        &bg-base {
+            @apply bg-white;
+        }
+
+        // Background color for overlays like modals and dropdowns
+        &bg-overlay {
+            @apply bg-white;
+        }
+
+        &bg-well {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        // Highlight (hover) background
+        &bg-highlights:hover {
+            @apply bg-gray-200;
+        }
+
+        // Selection background
+        &bg-selects.is-selected {
+            @apply bg-blue-600;
+        }
+
+        // Selection foreground
+        &text-selects.is-selected {
+            @apply text-white;
+        }
+
+        &text-primary {
+            color: rgba(0,0,0,0.87);
+        }
+
+        &text-secondary {
+            color: rgba(0,0,0,0.54);
+        }
+
+        &border {
+            @apply border-gray-300;
         }
     }
 }
