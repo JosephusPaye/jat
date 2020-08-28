@@ -13,8 +13,13 @@
             @done="onDone"
             v-slot="{ time, state, isOverflowed, isDone }"
         >
-            <div class="w-full max-w-4xl -mt-10 pt-4" style="margin-top: -2.25rem;">
-                <div class="border theme:border rounded flex flex-col items-center p-16 pb-12 theme:bg-well shadow-inner">
+            <div
+                class="w-full max-w-4xl -mt-10 pt-4"
+                style="margin-top: -2.25rem;"
+            >
+                <div
+                    class="border theme:border rounded flex flex-col items-center p-16 pb-12 theme:bg-well shadow-inner"
+                >
                     <div
                         class="text-6xl theme:text-primary"
                         :class="[
@@ -313,61 +318,60 @@ export default {
     outline: none;
 }
 
-*:focus.focus-visible,
-*:focus.focus-visible + .focus-target {
-    outline: none;
-    box-shadow: rgba(66, 153, 225, 0.6) 0px 0px 0px 3px;
-}
-
-.bg-base,
-.bg-overlay,
-.text-primary,
-.text-secondary {
+*[class^='theme:'] {
     transition-property: color, background-color;
     transition-duration: 0.4s;
     transition-timing-function: ease-in-out;
 }
 
-.color-scheme-dark .theme\: {
-    // The base background color
-    &bg-base {
-        @apply bg-gray-900;
+.color-scheme-dark {
+    *:focus.focus-visible,
+    *:focus.focus-visible + .focus-target {
+        outline: none;
+        box-shadow: #4FC3F7 0px 0px 0px 3px;
     }
 
-    // Background color for overlays like modals and dropdowns
-    &bg-overlay {
-        @apply bg-gray-800;
-    }
+    .theme\: {
+        // The base background color
+        &bg-base {
+            @apply bg-gray-900;
+        }
 
-    &bg-well {
-        background-color: rgba(0,0,0,0.15);
-    }
+        // Background color for overlays like modals and dropdowns
+        &bg-overlay {
+            @apply bg-gray-900;
+        }
 
-    // Highlight (hover) background
-    &bg-highlights:hover {
-        @apply bg-gray-800;
-    }
+        &bg-well {
+            background-color: rgba(0, 0, 0, 0.15);
+        }
 
-    // Selection background
-    &bg-selects.is-selected {
-        @apply bg-blue-600;
-    }
+        // Highlight (hover) background
+        &bg-highlights:hover {
+            @apply bg-gray-800;
+        }
 
-    // Selection foreground
-    &text-selects.is-selected {
-        @apply text-white;
-    }
+        // Selection background
+        &bg-selects.is-selected {
+            @apply bg-blue-600;
+        }
 
-    &text-primary {
-        @apply text-gray-100;
-    }
+        // Selection foreground
+        &text-selects.is-selected {
+            @apply text-white;
+        }
 
-    &text-secondary {
-        @apply text-gray-500;
-    }
+        &text-primary {
+            @apply text-gray-100;
+        }
 
-    &border {
-        @apply border-gray-700;
+        &text-secondary {
+            @apply text-gray-500;
+        }
+
+        &border {
+            @apply border-gray-800;
+        }
     }
 }
 </style>
