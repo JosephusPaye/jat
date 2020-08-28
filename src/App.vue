@@ -43,8 +43,8 @@
                     </Button>
                 </div>
 
-                <div class="mt-4 text-primary">
-                    <button class="text-primary mr-2" @click="toggle">
+                <ButtonGroup class="mt-4">
+                    <Button @click="toggle">
                         {{
                             state === 'stopped'
                                 ? '▶ Start'
@@ -52,18 +52,18 @@
                                 ? '⏸ Pause'
                                 : '▶ Resume'
                         }}
-                    </button>
-                    <button class="text-primary" @click="reset">
+                    </Button>
+                    <Button @click="reset">
                         🔄 Reset
-                    </button>
+                    </Button>
                     <Settings
                         :showMilliseconds.sync="timer.showMilliseconds"
                         :allowOverflow.sync="timer.allowOverflow"
                         :allowSound.sync="timer.allowSound"
                     />
-                </div>
+                </ButtonGroup>
 
-                <div class="flex">
+                <!-- <div class="flex">
                     <button class="text-primary" @click="zoomIn">
                         ➕ Bigger
                     </button>
@@ -78,7 +78,7 @@
                     <button class="text-primary" @click="toggleFullscreen">
                         {{ view.isFullscreen ? '↙ Exit' : '↗ Fullscreen' }}
                     </button>
-                </div>
+                </div> -->
             </div>
         </Timer>
 
@@ -89,6 +89,7 @@
 <script>
 import { TimerVue as Timer } from '@josephuspaye/timer';
 import Button from './Button.vue';
+import ButtonGroup from './ButtonGroup.vue';
 import TimerType from './TimerType.vue';
 import ChangeTime from './ChangeTime.vue';
 import Settings from './Settings.vue';
@@ -133,7 +134,7 @@ function loop(sound, times) {
 export default {
     name: 'App',
 
-    components: { Button, ChangeTime, Timer, TimerType, Settings },
+    components: { Button, ButtonGroup, ChangeTime, Timer, TimerType, Settings },
 
     data() {
         const prefersDarkMode = window.matchMedia('prefers-color-scheme: dark')

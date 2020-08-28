@@ -1,8 +1,8 @@
 <template>
   <div class="relative">
-    <button class="text-primary" @click="toggleMenu">
+    <Button @click="toggleMenu">
       ⚙ Settings
-    </button>
+    </Button>
     <div class="absolute" v-show="menuOpen">
       <label class="flex items-center"
         ><input
@@ -36,8 +36,12 @@
 </template>
 
 <script>
+import Button from './Button.vue';
+
 export default {
   name: "Settings",
+
+  components: { Button },
 
   props: {
     showMilliseconds: Boolean,
