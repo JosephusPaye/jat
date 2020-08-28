@@ -4,3 +4,7 @@
 /* purgecss end ignore */
 
 @tailwind utilities;
+
+.min-w-4xl {
+    min-width: 56rem;
+}

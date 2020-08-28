@@ -1,7 +1,7 @@
 <template>
     <div
         id="app"
-        class="h-screen w-screen flex flex-col items-center justify-center theme:bg-base"
+        class="h-screen w-screen flex flex-col items-center justify-center theme:bg-base px-6"
     >
         <TimerType class="relative z-10" v-model="timer.type" />
 
@@ -11,32 +11,21 @@
             :length="timer.length"
             :allowOverflow="timer.allowOverflow"
             @done="onDone"
-            v-slot="{ time, state, isOverflowed, isDone }"
+            v-slot="{ time, state, isOverflowed }"
         >
             <div
-                class="w-full max-w-4xl -mt-10 pt-4"
+                class="max-w-full min-w-4xl -mt-10 pt-4"
                 style="margin-top: -2.25rem;"
             >
                 <div
                     class="border theme:border rounded flex flex-col items-center p-16 pb-12 theme:bg-well shadow-inner"
                 >
-                    <div
-                        class="text-6xl theme:text-primary"
-                        :class="[
-                            isOverflowed ? 'text-red-500' : '',
-                            isDone ? 'strikethrough' : '',
-                        ]"
-                    >
-                        <span>{{ time.h }}</span>
-                        <span>:</span>
-                        <span>{{ time.m }}</span>
-                        <span>:</span>
-                        <span>{{ time.s }}</span>
-                        <template v-if="timer.showMilliseconds">
-                            <span>:</span>
-                            <span>{{ time.ms }}</span>
-                        </template>
-                    </div>
+                    <TimerView
+                        :time="time"
+                        :isOverflowed="isOverflowed"
+                        :showMilliseconds="timer.showMilliseconds"
+                        :zoomFactor="view.zoomFactor"
+                    />
 
                     <Button class="mt-4" @click="showChangeTimeModal = true">
                         ✏ Change time
@@ -64,7 +53,7 @@
                         />
                     </ButtonGroup>
 
-                    <ButtonGroup class="flex">
+                    <ButtonGroup class="flex ml-4">
                         <Button @click="zoomIn">
                             ➕ Bigger
                         </Button>
@@ -96,53 +85,32 @@
 
 <script>
 import { TimerVue as Timer } from '@josephuspaye/timer';
+
 import Button from './Button.vue';
 import ButtonGroup from './ButtonGroup.vue';
-import TimerType from './TimerType.vue';
 import ChangeTime from './ChangeTime.vue';
 import Settings from './Settings.vue';
-import { Howl } from 'howler';
+import TimerType from './TimerType.vue';
+import TimerView from './TimerView.vue';
+import UseFullscreen from './UseFullscreen.js';
 
-export function restore(key, fallback) {
-    const data = localStorage.getItem(`jat:${key}`);
-    return data ? JSON.parse(data) : fallback;
-}
-
-export function persist(key, data) {
-    localStorage.setItem(`jat:${key}`, JSON.stringify(data));
-}
-
-const timerSound = new Howl({
-    src: ['/timer.ogg', '/timer.oga'],
-});
-
-function loop(sound, times) {
-    let stopped = false;
-
-    function play() {
-        sound.once('end', () => {
-            times--;
-
-            if (!stopped && times > 0) {
-                play();
-            }
-        });
-
-        sound.play();
-    }
-
-    play();
-
-    return () => {
-        sound.stop();
-        stopped = true;
-    };
-}
+import { timerSound, loop } from './sound.js';
+import { restore, persist } from './storage.js';
 
 export default {
     name: 'App',
 
-    components: { Button, ButtonGroup, ChangeTime, Timer, TimerType, Settings },
+    components: {
+        Button,
+        ButtonGroup,
+        ChangeTime,
+        Settings,
+        Timer,
+        TimerType,
+        TimerView,
+    },
+
+    mixins: [UseFullscreen],
 
     data() {
         const prefersDarkMode = window.matchMedia('prefers-color-scheme: dark')
@@ -176,13 +144,7 @@ export default {
             },
             deep: true,
         },
-        'view.zoomFactor': {
-            handler(zoomFactor) {
-                document.documentElement.style.fontSize = `${zoomFactor *
-                    16}px`;
-            },
-            immediate: true,
-        },
+
         'view.colorScheme': {
             handler(colorScheme) {
                 document.body.classList.remove(
@@ -194,12 +156,14 @@ export default {
             },
             immediate: true,
         },
+
         timer: {
             handler(timer) {
                 persist('timer', timer);
             },
             deep: true,
         },
+
         'timer.allowSound'(allowSound) {
             if (!allowSound && this.stopTimerSound) {
                 this.stopTimerSound();
@@ -213,39 +177,9 @@ export default {
     },
 
     mounted() {
-        document.addEventListener(
-            'fullscreenchange',
-            this.onFullScreenChange,
-            false
-        );
-        document.addEventListener(
-            'webkitfullscreenchange',
-            this.onFullScreenChange,
-            false
-        );
-        document.addEventListener(
-            'mozfullscreenchange',
-            this.onFullScreenChange,
-            false
-        );
-    },
-
-    beforeDestroy() {
-        document.removeEventListener(
-            'fullscreenchange',
-            this.onFullScreenChange,
-            false
-        );
-        document.removeEventListener(
-            'webkitfullscreenchange',
-            this.onFullScreenChange,
-            false
-        );
-        document.removeEventListener(
-            'mozfullscreenchange',
-            this.onFullScreenChange,
-            false
-        );
+        this.$on('fullscreen-change', (isFullscreen) => {
+            this.view.isFullscreen = isFullscreen;
+        });
     },
 
     methods: {
@@ -289,26 +223,6 @@ export default {
         toggleColorScheme() {
             this.view.colorScheme =
                 this.view.colorScheme === 'light' ? 'dark' : 'light';
-        },
-
-        isFullscreen() {
-            return Boolean(
-                document.fullscreenElement ||
-                    document.mozFullScreenElement ||
-                    document.webkitFullscreenElement
-            );
-        },
-
-        toggleFullscreen() {
-            if (this.isFullscreen()) {
-                document.exitFullscreen && document.exitFullscreen();
-            } else {
-                document.documentElement.requestFullscreen();
-            }
-        },
-
-        onFullScreenChange() {
-            this.view.isFullscreen = this.isFullscreen();
         },
 
         onDone() {
