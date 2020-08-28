@@ -1,19 +1,19 @@
 <template>
-    <button
-        class="button rounded font-semibold px-3 leading-none py-3 select-none"
-        :class="{ 'is-selected': selected }"
-        @click="$emit('click', $event)"
-    >
-        <slot></slot>
-    </button>
+  <button
+    class="button rounded font-semibold px-3 leading-none py-3 select-none"
+    :class="{ 'is-selected': selected }"
+    @click="$emit('click', $event)"
+  >
+    <slot></slot>
+  </button>
 </template>
 
 <script>
 export default {
-    name: 'Button',
-    props: {
-      selected: Boolean
-    }
+  name: "Button",
+  props: {
+    selected: Boolean
+  }
 };
 </script>
 
@@ -40,7 +40,7 @@ export default {
 }
 
 .color-scheme-light .button {
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
   @apply bg-gray-300;
 
   &:hover:not(:disabled) {

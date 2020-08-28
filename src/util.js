@@ -1,4 +1,4 @@
-import { getTimeParts } from '@josephuspaye/timer';
+import { getTimeParts } from "@josephuspaye/timer";
 
 const timeFactors = [
   1, // seconds in a second

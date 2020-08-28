@@ -1,4 +1,4 @@
-import 'focus-visible';
+import "focus-visible";
 import Vue from "vue";
 import App from "./App.vue";
 import * as emojicon from "emojicon";

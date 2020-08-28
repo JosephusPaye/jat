@@ -1,28 +1,28 @@
-import { Howl } from 'howler';
+import { Howl } from "howler";
 
 export const timerSound = new Howl({
-    src: ['/timer.ogg', '/timer.oga'],
+  src: ["/timer.ogg", "/timer.oga"]
 });
 
 export function loop(sound, times) {
-    let stopped = false;
+  let stopped = false;
 
-    function play() {
-        sound.once('end', () => {
-            times--;
+  function play() {
+    sound.once("end", () => {
+      times--;
 
-            if (!stopped && times > 0) {
-                play();
-            }
-        });
+      if (!stopped && times > 0) {
+        play();
+      }
+    });
 
-        sound.play();
-    }
+    sound.play();
+  }
 
-    play();
+  play();
 
-    return () => {
-        sound.stop();
-        stopped = true;
-    };
+  return () => {
+    sound.stop();
+    stopped = true;
+  };
 }

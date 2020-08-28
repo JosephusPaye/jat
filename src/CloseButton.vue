@@ -1,28 +1,30 @@
 <template>
-    <button
-        class="close-button w-10 h-10 rounded-full inline-flex items-center justify-center"
-        @click="$emit('click', $event)"
-    >✖</button>
+  <button
+    class="close-button w-10 h-10 rounded-full inline-flex items-center justify-center"
+    @click="$emit('click', $event)"
+  >
+    ✖
+  </button>
 </template>
 
 <script>
 export default {
-    name: 'CloseButton'
+  name: "CloseButton"
 };
 </script>
 
 <style lang="scss">
 .color-scheme-dark .close-button {
-    &:hover,
-    &:focus {
-        @apply bg-gray-800;
-    }
+  &:hover,
+  &:focus {
+    @apply bg-gray-800;
+  }
 }
 
 .color-scheme-light .close-button {
-    &:hover,
-    &:focus {
-        @apply bg-gray-300;
-    }
+  &:hover,
+  &:focus {
+    @apply bg-gray-300;
+  }
 }
 </style>
