@@ -1,4 +1,4 @@
-# timerapp
+# Jat: Just a timer
 
 ## Project setup
 ```
