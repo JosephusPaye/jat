@@ -1,23 +1,10 @@
 <template>
     <div
         id="app"
-        class="h-screen w-screen flex flex-col items-center justify-center bg-base"
-        :class="['color-scheme-' + view.colorScheme]"
+        class="h-screen w-screen flex flex-col items-center justify-center theme:bg-base"
     >
-        <div class="flex">
-            <ToggleButton
-                id="countdown"
-                :value.sync="timer.type"
-                class="mr-2 text-primary"
-                >⏳ Countdown</ToggleButton
-            >
-            <ToggleButton
-                id="stopwatch"
-                :value.sync="timer.type"
-                class="text-primary"
-                >⌚ Stopwatch</ToggleButton
-            >
-        </div>
+        <TimerType class="relative z-10" v-model="timer.type" />
+
         <Timer
             ref="timer"
             :type="timer.type"
@@ -26,23 +13,29 @@
             @done="onDone"
             v-slot="{ time, state, isOverflowed, isDone }"
         >
-            <div class="border rounded w-full max-w-lg">
-                <button
-                    class="text-primary"
-                    @click="showChangeTimeModal = true"
-                >
-                    ✏ Change time
-                </button>
+            <div class="w-full max-w-4xl -mt-10 pt-4" style="margin-top: -2.25rem;">
+                <div class="border theme:border rounded flex flex-col items-center p-16 pb-12 theme:bg-well shadow-inner">
+                    <div
+                        class="text-6xl theme:text-primary"
+                        :class="[
+                            isOverflowed ? 'text-red-500' : '',
+                            isDone ? 'strikethrough' : '',
+                        ]"
+                    >
+                        <span>{{ time.h }}</span>
+                        <span>:</span>
+                        <span>{{ time.m }}</span>
+                        <span>:</span>
+                        <span>{{ time.s }}</span>
+                        <template v-if="timer.showMilliseconds">
+                            <span>:</span>
+                            <span>{{ time.ms }}</span>
+                        </template>
+                    </div>
 
-                <div
-                    class="text-4xl text-primary"
-                    :class="[
-                        isOverflowed ? 'text-red-500' : '',
-                        isDone ? 'strikethrough' : '',
-                    ]"
-                >
-                    {{ time.h }}:{{ time.m }}:{{ time.s
-                    }}<span v-if="timer.showMilliseconds">:{{ time.ms }}</span>
+                    <Button class="mt-4" @click="showChangeTimeModal = true">
+                        ✏ Change time
+                    </Button>
                 </div>
 
                 <div class="mt-4 text-primary">
@@ -66,15 +59,21 @@
                 </div>
 
                 <div class="flex">
-            <button class="text-primary" @click="zoomIn">➕ Bigger</button>
-            <button class="text-primary" @click="zoomOut">➖ Smaller</button>
-            <button class="text-primary" @click="toggleColorScheme">
-                {{ view.colorScheme === 'light' ? '🌙 Dark' : '☀ Light' }}
-            </button>
-            <button class="text-primary" @click="toggleFullscreen">
-                {{ view.isFullscreen ? '↙ Exit' : '↗ Fullscreen' }}
-            </button>
-        </div>
+                    <button class="text-primary" @click="zoomIn">
+                        ➕ Bigger
+                    </button>
+                    <button class="text-primary" @click="zoomOut">
+                        ➖ Smaller
+                    </button>
+                    <button class="text-primary" @click="toggleColorScheme">
+                        {{
+                            view.colorScheme === 'light' ? '🌙 Dark' : '☀ Light'
+                        }}
+                    </button>
+                    <button class="text-primary" @click="toggleFullscreen">
+                        {{ view.isFullscreen ? '↙ Exit' : '↗ Fullscreen' }}
+                    </button>
+                </div>
             </div>
         </Timer>
 
@@ -84,7 +83,8 @@
 
 <script>
 import { TimerVue as Timer } from '@josephuspaye/timer';
-import ToggleButton from './ToggleButton.vue';
+import Button from './Button.vue';
+import TimerType from './TimerType.vue';
 import ChangeTime from './ChangeTime.vue';
 import Settings from './Settings.vue';
 import { Howl } from 'howler';
@@ -128,7 +128,7 @@ function loop(sound, times) {
 export default {
     name: 'App',
 
-    components: { ChangeTime, Timer, ToggleButton, Settings },
+    components: { Button, ChangeTime, Timer, TimerType, Settings },
 
     data() {
         const prefersDarkMode = window.matchMedia('prefers-color-scheme: dark')
@@ -166,6 +166,17 @@ export default {
             handler(zoomFactor) {
                 document.documentElement.style.fontSize = `${zoomFactor *
                     16}px`;
+            },
+            immediate: true,
+        },
+        'view.colorScheme': {
+            handler(colorScheme) {
+                document.body.classList.remove(
+                    colorScheme === 'light'
+                        ? 'color-scheme-dark'
+                        : 'color-scheme-light'
+                );
+                document.body.classList.add('color-scheme-' + colorScheme);
             },
             immediate: true,
         },
@@ -298,6 +309,16 @@ export default {
 <style lang="scss">
 @import './tailwind.css';
 
+.js-focus-visible :focus:not(.focus-visible) {
+    outline: none;
+}
+
+*:focus.focus-visible,
+*:focus.focus-visible + .focus-target {
+    outline: none;
+    box-shadow: rgba(66, 153, 225, 0.6) 0px 0px 0px 3px;
+}
+
 .bg-base,
 .bg-overlay,
 .text-primary,
@@ -307,41 +328,46 @@ export default {
     transition-timing-function: ease-in-out;
 }
 
-.color-scheme-light {
-    &.bg-base,
-    .bg-base {
-        @apply bg-white;
-    }
-
-    .bg-overlay {
-        @apply bg-white;
-    }
-
-    .text-primary {
-        color: rgba(0, 0, 0, 0.87);
-    }
-
-    .text-secondary {
-        color: rgba(0, 0, 0, 0.54);
-    }
-}
-
-.color-scheme-dark {
-    &.bg-base,
-    .bg-base {
+.color-scheme-dark .theme\: {
+    // The base background color
+    &bg-base {
         @apply bg-gray-900;
     }
 
-    .bg-overlay {
+    // Background color for overlays like modals and dropdowns
+    &bg-overlay {
         @apply bg-gray-800;
     }
 
-    .text-primary {
+    &bg-well {
+        background-color: rgba(0,0,0,0.15);
+    }
+
+    // Highlight (hover) background
+    &bg-highlights:hover {
+        @apply bg-gray-800;
+    }
+
+    // Selection background
+    &bg-selects.is-selected {
+        @apply bg-blue-600;
+    }
+
+    // Selection foreground
+    &text-selects.is-selected {
+        @apply text-white;
+    }
+
+    &text-primary {
         @apply text-gray-100;
     }
 
-    .text-secondary {
+    &text-secondary {
         @apply text-gray-500;
+    }
+
+    &border {
+        @apply border-gray-700;
     }
 }
 </style>
