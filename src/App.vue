@@ -83,6 +83,32 @@
       :show.sync="showChangeTimeModal"
       @time="setTime"
     />
+
+    <div class="mt-16 theme:text-secondary text-sm">
+      Created by
+      <a
+        class="underline"
+        href="https://twitter.com/JosephusPaye"
+        target="_blank"
+        rel="noopener"
+        >Josephus Paye II</a
+      >
+      for
+      <a
+        class="underline"
+        href="https://twitter.com/JosephusPaye/status/1214853295023411200"
+        target="_blank"
+        rel="noopener"
+        >#CreateWeekly</a
+      >. Available on
+      <a
+        class="underline"
+        href="https://github.com/JosephusPaye/jat"
+        target="_blank"
+        rel="noopener"
+        >GitHub</a
+      >.
+    </div>
   </div>
 </template>
 
