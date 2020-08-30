@@ -152,7 +152,7 @@ export default {
   mixins: [UseFullscreen],
 
   data() {
-    const prefersDarkMode = window.matchMedia("prefers-color-scheme: dark")
+    const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)")
       .matches;
 
     const data = {
