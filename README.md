@@ -1,5 +1,7 @@
 # Jat: Just a timer
 
+<img width="64px" height="64px" src="./jat.svg">
+
 Jat is a beautifully simple countdown timer and stopwatch. <https://jat.netlify.app>
 
 This project is part of [#CreateWeekly](https://dev.to/josephuspaye/createweekly-create-something-new-publicly-every-week-in-2020-1nh9), my attempt to create something new publicly every week in 2020.
