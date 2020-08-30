@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <label>
+    <label title="Shortcut: c">
       <input
         type="radio"
         class="timer-type__radio"
@@ -16,7 +16,7 @@
         ⏳ Countdown
       </div>
     </label>
-    <label>
+    <label title="Shortcut: s">
       <input
         type="radio"
         class="timer-type__radio"

@@ -27,14 +27,18 @@
             :zoomFactor="view.zoomFactor"
           />
 
-          <Button class="mt-8" @click="showChangeTimeModal = true">
+          <Button
+            class="mt-8"
+            title="Shortcut: t"
+            @click="showChangeTimeModal = true"
+          >
             ✏ Change time
           </Button>
         </div>
 
         <div class="flex justify-between mt-4">
           <ButtonGroup>
-            <Button @click="toggle">
+            <Button @click="toggle" title="Shortcut: p">
               {{
                 state === "stopped"
                   ? "▶ Start"
@@ -43,7 +47,7 @@
                   : "▶ Resume"
               }}
             </Button>
-            <Button @click="reset">
+            <Button @click="reset" title="Shortcut: r">
               🔄 Reset
             </Button>
             <Settings
@@ -54,16 +58,19 @@
           </ButtonGroup>
 
           <ButtonGroup class="flex ml-4">
-            <Button @click="zoomIn">
+            <Button @click="zoomIn" title="Shortcut: +">
               ➕ Bigger
             </Button>
-            <Button @click="zoomOut">
+            <Button @click="zoomOut" title="Shortcut: -">
               ➖ Smaller
             </Button>
-            <Button @click="toggleColorScheme">
+            <Button
+              @click="toggleColorScheme"
+              :title="`Shortcut: ${view.colorScheme === 'light' ? 'd' : 'l'}`"
+            >
               {{ view.colorScheme === "light" ? "🌙 Dark" : "☀ Light" }}
             </Button>
-            <Button @click="toggleFullscreen">
+            <Button @click="toggleFullscreen" title="Shortcut: f">
               {{ view.isFullscreen ? "↙ Exit" : "↗ Fullscreen" }}
             </Button>
           </ButtonGroup>
@@ -229,7 +236,7 @@ export default {
             break;
           case "r":
           case "R":
-            if (confirm('Reset timer?')) {
+            if (confirm("Reset timer?")) {
               this.reset();
             }
             break;

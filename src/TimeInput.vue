@@ -4,11 +4,12 @@
       class="border text-2xl px-4 py-2 leading-none rounded w-full"
       type="text"
       ref="input"
+      :aria-invalid="invalid"
       :value="value"
-      @input="$emit('input', $event.target.value)"
       :class="{
         'is-invalid': invalid
       }"
+      @input="$emit('input', $event.target.value)"
     />
     <div
       class="text-sm mt-1"

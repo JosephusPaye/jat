@@ -12,6 +12,7 @@
       @keydown.native.stop.esc="onEsc"
     >
       <label
+        title="Shortcut: m"
         class="flex items-center px-4 py-2 leading-none cursor-pointer select-none theme:text-primary theme:bg-highlights"
         ><input
           class="w-3 h-3 mr-3"
@@ -23,6 +24,7 @@
         Show milliseconds</label
       >
       <label
+        title="Shortcut: o"
         class="flex items-center px-4 py-2 leading-none cursor-pointer select-none theme:text-primary theme:bg-highlights"
         ><input
           class="w-3 h-3 mr-3"
@@ -33,6 +35,7 @@
         Allow overflow</label
       >
       <label
+        title="Shortcut: a"
         class="flex items-center px-4 py-2 leading-none cursor-pointer select-none theme:text-primary theme:bg-highlights"
         ><input
           class="w-3 h-3 mr-3"
