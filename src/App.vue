@@ -2,8 +2,9 @@
   <div
     id="app"
     class="h-screen w-screen flex flex-col items-center justify-center theme:bg-base px-6"
+    :class="[`timer-${state}`, hideChrome ? 'enable-autohide' : '']"
   >
-    <TimerType class="relative z-10" v-model="timer.type" />
+    <TimerType class="relative z-10 autohides" v-model="timer.type" />
 
     <Timer
       ref="timer"
@@ -11,6 +12,7 @@
       :length="timer.length"
       :allowOverflow="timer.allowOverflow"
       @done="onDone"
+      @state="onStateChange"
       v-slot="{ time, state, isDone, isOverflowed }"
     >
       <div
@@ -18,7 +20,7 @@
         style="margin-top: -2.25rem;"
       >
         <div
-          class="border theme:border rounded flex flex-col items-center p-16 pb-12 theme:bg-well"
+          class="border theme:border rounded flex flex-col items-center p-16 pb-12 theme:bg-well autohides-bg"
         >
           <TimerView
             :time="time"
@@ -28,7 +30,7 @@
             :zoomFactor="view.zoomFactor"
           />
 
-          <div class="mt-8 flex">
+          <div class="mt-8 flex autohides">
             <div
               class="inline-flex items-center px-4 rounded-l text-lg font-semibold border border-r-0 theme:border theme:text-primary"
             >
@@ -44,7 +46,7 @@
           </div>
         </div>
 
-        <div class="flex justify-between mt-4">
+        <div class="flex justify-between mt-4 autohides">
           <ButtonGroup>
             <Button @click="toggle" title="Shortcut: p">
               {{
@@ -62,6 +64,7 @@
               :showMilliseconds.sync="timer.showMilliseconds"
               :allowOverflow.sync="timer.allowOverflow"
               :allowSound.sync="timer.allowSound"
+              :autoHideChrome.sync="view.autoHideChrome"
             />
           </ButtonGroup>
 
@@ -92,7 +95,7 @@
       @time="setTime"
     />
 
-    <div class="mt-16 theme:text-secondary text-sm">
+    <div class="mt-16 theme:text-secondary text-sm autohides">
       Created by
       <a
         class="underline"
@@ -166,8 +169,11 @@ export default {
       view: restore("view", {
         zoomFactor: 1,
         colorScheme: prefersDarkMode ? "dark" : "light",
-        isFullscreen: false
+        isFullscreen: false,
+        autoHideChrome: true
       }),
+      state: "stopped",
+      hideChrome: false,
       showChangeTimeModal: false
     };
 
@@ -200,6 +206,23 @@ export default {
       immediate: true
     },
 
+    "view.autoHideChrome"(autoHideChrome) {
+      if (autoHideChrome) {
+        this.initAutoHide();
+        this.startAutoHideTimeout();
+      } else {
+        this.hideChrome = false;
+
+        if (this.autoHideTimeoutId) {
+          clearTimeout(this.autoHideTimeoutId);
+        }
+
+        if (this.cleanUpAutoHide) {
+          this.cleanUpAutoHide();
+        }
+      }
+    },
+
     timer: {
       handler(timer) {
         persist("timer", timer);
@@ -225,10 +248,14 @@ export default {
     });
 
     window.onbeforeunload = () => {
-      if (this.$refs.timer.state === "running") {
+      if (this.state === "running") {
         return "Timer is running, are you sure you want to leave?";
       }
     };
+
+    if (this.view.autoHideChrome) {
+      this.initAutoHide();
+    }
 
     keys.setContext("main");
     keys.add(
@@ -249,6 +276,8 @@ export default {
         "O",
         "a",
         "A",
+        "h",
+        "H",
         "=",
         "+",
         "-",
@@ -299,6 +328,10 @@ export default {
           case "A":
             this.timer.allowSound = !this.timer.allowSound;
             break;
+          case "h":
+          case "H":
+            this.view.autoHideChrome = !this.view.autoHideChrome;
+            break;
           case "=":
           case "+":
             this.zoomIn();
@@ -330,11 +363,15 @@ export default {
 
   beforeDestroy() {
     keys.removeContext("main");
+
+    if (this.cleanUpAutoHide) {
+      this.cleanUpAutoHide();
+    }
   },
 
   methods: {
     setTime(time) {
-      const wasRunning = this.$refs.timer.state === "running";
+      const wasRunning = this.state === "running";
 
       this.$refs.timer.stop();
       this.timer.length = time;
@@ -373,6 +410,50 @@ export default {
     toggleColorScheme() {
       this.view.colorScheme =
         this.view.colorScheme === "light" ? "dark" : "light";
+    },
+
+    initAutoHide() {
+      if (this.cleanUpAutoHide) {
+        this.cleanUpAutoHide();
+      }
+
+      const onInteraction = () => {
+        this.startAutoHideTimeout();
+      };
+
+      document.addEventListener("mousemove", onInteraction, { passive: true });
+      document.addEventListener("keydown", onInteraction, { passive: true });
+
+      this.cleanUpAutoHide = () => {
+        document.removeEventListener("mousemove", onInteraction, {
+          passive: true
+        });
+        document.removeEventListener("keydown", onInteraction, {
+          passive: true
+        });
+        this.cleanUpAutoHide = undefined;
+      };
+    },
+
+    startAutoHideTimeout() {
+      this.hideChrome = false;
+
+      if (this.autoHideTimeoutId) {
+        clearTimeout(this.autoHideTimeoutId);
+      }
+
+      this.autoHideTimeoutId = setTimeout(() => {
+        this.hideChrome = true;
+        this.autoHideTimeoutId = undefined;
+      }, 5000);
+    },
+
+    onStateChange(state) {
+      this.state = state;
+
+      if (state === "running" && this.view.autoHideChrome) {
+        this.startAutoHideTimeout();
+      }
     },
 
     onDone() {
@@ -490,6 +571,29 @@ export default {
     &border {
       @apply border-gray-300;
     }
+  }
+}
+
+.autohides {
+  transition: opacity 0.2s;
+}
+
+.autohides-bg {
+  transition-property: background-color, border-color;
+  transition-duration: 0.2s;
+}
+
+.timer-running.enable-autohide {
+  .autohides {
+    transition: opacity 0.2s;
+    opacity: 0;
+  }
+
+  .autohides-bg {
+    transition-property: background-color, border-color;
+    transition-duration: 0.2s;
+    background-color: transparent !important;
+    border-color: transparent !important;
   }
 }
 </style>

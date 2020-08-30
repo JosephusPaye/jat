@@ -4,7 +4,7 @@
       ⚙ Settings
     </Button>
     <FocusContainer
-      class="absolute left-0 w-48 py-2 border theme:bg-overlay theme:border rounded rounded-bl-none"
+      class="absolute left-0 w-56 py-2 border theme:bg-overlay theme:border rounded rounded-bl-none"
       style="bottom: 100%"
       :focusRedirector="redirectFocus"
       :containFocus="menuOpen"
@@ -40,11 +40,22 @@
         ><input
           class="w-3 h-3 mr-3"
           type="checkbox"
-          ref="focusTail"
           :checked="allowSound"
           @input="$emit('update:allowSound', $event.target.checked)"
         />
         Alarm when done</label
+      >
+      <label
+        title="Shortcut: h"
+        class="flex items-center px-4 py-2 leading-none cursor-pointer select-none theme:text-primary theme:bg-highlights"
+        ><input
+          class="w-3 h-3 mr-3"
+          type="checkbox"
+          ref="focusTail"
+          :checked="autoHideChrome"
+          @input="$emit('update:autoHideChrome', $event.target.checked)"
+        />
+        Hide UI when running</label
       >
     </FocusContainer>
   </div>
@@ -65,7 +76,8 @@ export default {
   props: {
     showMilliseconds: Boolean,
     allowOverflow: Boolean,
-    allowSound: Boolean
+    allowSound: Boolean,
+    autoHideChrome: Boolean
   },
 
   data() {
