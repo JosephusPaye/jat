@@ -209,6 +209,12 @@ export default {
       this.view.isFullscreen = isFullscreen;
     });
 
+    window.onbeforeunload = () => {
+      if (this.$refs.timer.state === "running") {
+        return "Timer is running, are you sure you want to leave?";
+      }
+    };
+
     keys.setContext("main");
     keys.add(
       [
