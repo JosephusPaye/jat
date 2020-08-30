@@ -158,7 +158,7 @@ export default {
     const data = {
       timer: restore("timer", {
         type: "countdown",
-        length: 2 * 60 * 1000,
+        length: 5 * 60 * 1000,
         showMilliseconds: true,
         allowOverflow: false,
         allowSound: false
