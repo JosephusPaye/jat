@@ -53,11 +53,14 @@
 <script>
 import Button from "./Button.vue";
 import FocusContainer from "./FocusContainer.vue";
+import UseExternalClick from "./UseExternalClick.js";
 
 export default {
   name: "Settings",
 
   components: { Button, FocusContainer },
+
+  mixins: [UseExternalClick],
 
   props: {
     showMilliseconds: Boolean,
@@ -79,6 +82,12 @@ export default {
         this.onClose();
       }
     }
+  },
+
+  mounted() {
+    this.addExternalClickListener(this.$el, () => {
+      this.menuOpen = false;
+    });
   },
 
   methods: {
