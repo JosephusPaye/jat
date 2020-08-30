@@ -1,8 +1,6 @@
 <template>
   <div class="relative">
-    <Button @click="toggleMenu">
-      ⚙ Settings
-    </Button>
+    <Button @click="toggleMenu"> <SettingsIcon /> Settings </Button>
     <FocusContainer
       class="absolute left-0 w-56 py-2 border theme:bg-overlay theme:border rounded rounded-bl-none"
       style="bottom: 100%"
@@ -64,12 +62,14 @@
 <script>
 import Button from "./Button.vue";
 import FocusContainer from "./FocusContainer.vue";
+import SettingsIcon from "./icons/settings.svg";
+
 import UseExternalClick from "./UseExternalClick.js";
 
 export default {
   name: "Settings",
 
-  components: { Button, FocusContainer },
+  components: { Button, FocusContainer, SettingsIcon },
 
   mixins: [UseExternalClick],
 

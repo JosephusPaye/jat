@@ -41,7 +41,7 @@
               class="rounded-l-none"
               @click="showChangeTimeModal = true"
             >
-              ✏ Change time
+              <EditIcon /> Change time
             </Button>
           </div>
         </div>
@@ -49,16 +49,18 @@
         <div class="flex justify-between mt-4 autohides">
           <ButtonGroup>
             <Button @click="toggle" title="Shortcut: p">
+              <PauseIcon v-if="state === 'running'" />
+              <PlayIcon v-else />
               {{
                 state === "stopped"
-                  ? "▶ Start"
+                  ? "Start"
                   : state === "running"
-                  ? "⏸ Pause"
-                  : "▶ Resume"
+                  ? "Pause"
+                  : "Resume"
               }}
             </Button>
             <Button @click="reset" title="Shortcut: r">
-              🔄 Reset
+              <ResetIcon /> Reset
             </Button>
             <Settings
               :showMilliseconds.sync="timer.showMilliseconds"
@@ -70,19 +72,23 @@
 
           <ButtonGroup class="flex ml-4">
             <Button @click="zoomIn" title="Shortcut: +">
-              ➕ Bigger
+              <ZoomInIcon /> Bigger
             </Button>
             <Button @click="zoomOut" title="Shortcut: -">
-              ➖ Smaller
+              <ZoomOutIcon /> Smaller
             </Button>
             <Button
               @click="toggleColorScheme"
               :title="`Shortcut: ${view.colorScheme === 'light' ? 'd' : 'l'}`"
             >
-              {{ view.colorScheme === "light" ? "🌙 Dark" : "☀ Light" }}
+              <MoonIcon v-if="view.colorScheme === 'light'" />
+              <SunIcon v-else />
+              {{ view.colorScheme === "light" ? "Dark" : "Light" }}
             </Button>
             <Button @click="toggleFullscreen" title="Shortcut: f">
-              {{ view.isFullscreen ? "↙ Exit" : "↗ Fullscreen" }}
+              <CloseFullscreenIcon v-if="view.isFullscreen" />
+              <OpenFullscreenIcon v-else />
+              {{ view.isFullscreen ? "Exit" : "Fullscreen" }}
             </Button>
           </ButtonGroup>
         </div>
@@ -132,8 +138,18 @@ import ChangeTime from "./ChangeTime.vue";
 import Settings from "./Settings.vue";
 import TimerType from "./TimerType.vue";
 import TimerView from "./TimerView.vue";
-import UseFullscreen from "./UseFullscreen.js";
+import EditIcon from "./icons/edit.svg";
+import PauseIcon from "./icons/pause.svg";
+import PlayIcon from "./icons/play.svg";
+import ResetIcon from "./icons/reset.svg";
+import ZoomInIcon from "./icons/zoom-in.svg";
+import ZoomOutIcon from "./icons/zoom-out.svg";
+import MoonIcon from "./icons/moon.svg";
+import SunIcon from "./icons/sun.svg";
+import OpenFullscreenIcon from "./icons/open-fullscreen.svg";
+import CloseFullscreenIcon from "./icons/close-fullscreen.svg";
 
+import UseFullscreen from "./UseFullscreen.js";
 import { timerSound, loop } from "./sound.js";
 import { restore, persist } from "./storage.js";
 import * as keys from "./keys.js";
@@ -149,7 +165,17 @@ export default {
     Settings,
     Timer,
     TimerType,
-    TimerView
+    TimerView,
+    EditIcon,
+    PauseIcon,
+    PlayIcon,
+    ResetIcon,
+    ZoomInIcon,
+    ZoomOutIcon,
+    MoonIcon,
+    SunIcon,
+    OpenFullscreenIcon,
+    CloseFullscreenIcon
   },
 
   mixins: [UseFullscreen],
@@ -479,6 +505,10 @@ export default {
     box-shadow: #4fc3f7 0px 0px 0px 3px;
   }
 
+  svg {
+    color: #03a9f4; // #FFC107;
+  }
+
   .theme\: {
     // The base background color
     &bg-base {
@@ -514,7 +544,7 @@ export default {
     }
 
     &text-secondary {
-      @apply text-gray-500;
+      @apply text-gray-600;
     }
 
     &border {
@@ -528,6 +558,10 @@ export default {
   *:focus.focus-visible + .focus-target {
     outline: none;
     box-shadow: #4fc3f7 0px 0px 0px 3px;
+  }
+
+  svg {
+    color: #2196f3; // #ff9800;
   }
 
   .theme\: {
@@ -595,5 +629,15 @@ export default {
     background-color: transparent !important;
     border-color: transparent !important;
   }
+}
+
+svg {
+  fill: currentColor;
+  display: inline-block;
+  margin-right: 0.25rem;
+}
+
+.is-selected svg {
+  color: white;
 }
 </style>

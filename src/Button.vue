@@ -1,6 +1,6 @@
 <template>
   <button
-    class="button rounded font-semibold px-3 leading-none py-3 select-none"
+    class="button rounded font-semibold px-4 h-10 leading-none py-2 select-none inline-flex items-center justify-center"
     :class="{ 'is-selected': selected }"
     @click="$emit('click', $event)"
   >
