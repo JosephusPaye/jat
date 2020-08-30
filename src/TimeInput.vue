@@ -3,6 +3,7 @@
     <input
       class="border text-2xl px-4 py-2 leading-none rounded w-full"
       type="text"
+      ref="input"
       :value="value"
       @input="$emit('input', $event.target.value)"
       :class="{
@@ -28,6 +29,12 @@ export default {
   props: {
     value: String,
     invalid: Boolean
+  },
+
+  methods: {
+    focus() {
+      this.$refs.input.focus();
+    }
   }
 };
 </script>

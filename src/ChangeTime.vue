@@ -3,13 +3,18 @@
     <div class="modal-mask fixed top-0 left-0 w-full h-full table">
       <div class="modal-wrapper table-cell align-middle">
         <div class="modal-container w-full max-w-xl mx-auto">
-          <div class="theme:bg-overlay rounded-lg p-12 pt-16">
+          <FocusContainer
+            class="theme:bg-overlay rounded-lg p-12 pt-16"
+            :focusRedirector="redirectFocus"
+            @keydown.native.stop.esc="onEsc"
+          >
             <div class="relative">
               <div class="theme:text-primary text-2xl">
                 Change time
               </div>
               <CloseButton
                 class="absolute right-0 top-0 -mr-8 -mt-12"
+                ref="focusHead"
                 @click="close"
               />
             </div>
@@ -27,6 +32,7 @@
 
             <TimeInput
               class="mt-8"
+              ref="focusInitial"
               v-model="selectedTime"
               :invalid="selectedTimeInvalid"
             />
@@ -34,11 +40,12 @@
             <Button
               @click="setTime"
               class="mt-8 w-32"
+              ref="focusTail"
               :disabled="selectedTimeInvalid"
             >
               Set time
             </Button>
-          </div>
+          </FocusContainer>
         </div>
       </div>
     </div>
@@ -48,6 +55,7 @@
 <script>
 import Button from "./Button.vue";
 import CloseButton from "./CloseButton.vue";
+import FocusContainer from "./FocusContainer.vue";
 import TimeInput from "./TimeInput.vue";
 
 import { parseTime, formatTime } from "./util.js";
@@ -60,7 +68,12 @@ export default {
     show: Boolean
   },
 
-  components: { Button, CloseButton, TimeInput },
+  components: {
+    Button,
+    CloseButton,
+    FocusContainer,
+    TimeInput
+  },
 
   data() {
     return {
@@ -87,9 +100,10 @@ export default {
 
   watch: {
     show(show) {
-      // Set the selected time when the modal is opened
       if (show) {
-        this.selectedTime = formatTime(this.time);
+        this.onOpen();
+      } else {
+        this.onClose();
       }
     }
   },
@@ -102,6 +116,34 @@ export default {
 
     close() {
       this.$emit("update:show", false);
+    },
+
+    redirectFocus(event, options) {
+      if (options.isTabbingForward) {
+        this.$refs.focusHead.$el.focus();
+      } else {
+        this.$refs.focusTail.$el.focus();
+      }
+    },
+
+    onOpen() {
+      this.selectedTime = formatTime(this.time);
+
+      this.previousActiveElement = document.activeElement;
+
+      this.$nextTick(() => {
+        this.$refs.focusInitial.focus();
+      });
+    },
+
+    onClose() {
+      if (this.previousActiveElement) {
+        this.previousActiveElement.focus();
+      }
+    },
+
+    onEsc() {
+      this.close();
     }
   }
 };
