@@ -18,7 +18,7 @@
         style="margin-top: -2.25rem;"
       >
         <div
-          class="border theme:border rounded flex flex-col items-center p-16 pb-12 theme:bg-well shadow-inner"
+          class="border theme:border rounded flex flex-col items-center p-16 pb-12 theme:bg-well"
         >
           <TimerView
             :time="time"
@@ -92,6 +92,7 @@ import UseFullscreen from "./UseFullscreen.js";
 
 import { timerSound, loop } from "./sound.js";
 import { restore, persist } from "./storage.js";
+import * as keys from "./keys.js";
 
 export default {
   name: "App",
@@ -174,6 +175,105 @@ export default {
     this.$on("fullscreen-change", isFullscreen => {
       this.view.isFullscreen = isFullscreen;
     });
+
+    keys.setContext("main");
+    keys.add(
+      [
+        "c",
+        "C",
+        "s",
+        "S",
+        "t",
+        "T",
+        "p",
+        "P",
+        "r",
+        "R",
+        "m",
+        "M",
+        "o",
+        "O",
+        "a",
+        "A",
+        "=",
+        "+",
+        "-",
+        "_",
+        "0",
+        ")",
+        "d",
+        "D",
+        "l",
+        "L",
+        "f",
+        "F"
+      ],
+      "main",
+      event => {
+        switch (event.key) {
+          case "c":
+          case "C":
+            this.timer.type = "countdown";
+            break;
+          case "s":
+          case "S":
+            this.timer.type = "stopwatch";
+            break;
+          case "t":
+          case "T":
+            this.showChangeTimeModal = true;
+            break;
+          case "p":
+          case "P":
+            this.toggle();
+            break;
+          case "r":
+          case "R":
+            this.reset();
+            break;
+          case "m":
+          case "M":
+            this.timer.showMilliseconds = !this.timer.showMilliseconds;
+            break;
+          case "o":
+          case "O":
+            this.timer.allowOverflow = !this.timer.allowOverflow;
+            break;
+          case "a":
+          case "A":
+            this.timer.allowSound = !this.timer.allowSound;
+            break;
+          case "=":
+          case "+":
+            this.zoomIn();
+            break;
+          case "-":
+          case "_":
+            this.zoomOut();
+            break;
+          case "0":
+          case ")":
+            this.view.zoomFactor = 1;
+            break;
+          case "d":
+          case "D":
+            this.view.colorScheme = "dark";
+            break;
+          case "l":
+          case "L":
+            this.view.colorScheme = "light";
+            break;
+          case "f":
+          case "F":
+            this.toggleFullscreen();
+            break;
+        }
+      }
+    );
+  },
+
+  beforeDestroy() {
+    keys.removeContext("main");
   },
 
   methods: {
