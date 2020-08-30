@@ -229,7 +229,9 @@ export default {
             break;
           case "r":
           case "R":
-            this.reset();
+            if (confirm('Reset timer?')) {
+              this.reset();
+            }
             break;
           case "m":
           case "M":
