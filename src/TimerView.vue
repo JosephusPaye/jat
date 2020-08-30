@@ -1,7 +1,7 @@
 <template>
   <div
     class="timer-view theme:text-primary"
-    :class="{ 'is-overflowed': isOverflowed }"
+    :class="{ 'is-overflowed': isOverflowed, flash: isDone }"
     :style="{ fontSize: `${zoomFactor * 32}px` }"
   >
     <div class="leading-none" style="font-size: 4em">
@@ -25,6 +25,7 @@ export default {
   props: {
     time: Object,
     isOverflowed: Boolean,
+    isDone: Boolean,
     showMilliseconds: Boolean,
     zoomFactor: Number
   }
@@ -32,11 +33,26 @@ export default {
 </script>
 
 <style>
-.color-scheme-dark .is-overflowed {
-  color: #e91e63 !important;
+.timer-view.is-overflowed {
+  color: #f44336 !important;
 }
 
-.color-scheme-light .is-overflowed {
-  color: #f44336 !important;
+.flash {
+  animation-name: flash;
+  animation-duration: 1.75s;
+  animation-iteration-count: 3;
+}
+
+@keyframes flash {
+  from,
+  50%,
+  to {
+    opacity: 1;
+  }
+
+  25%,
+  75% {
+    opacity: 0;
+  }
 }
 </style>

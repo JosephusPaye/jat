@@ -58,6 +58,7 @@ import CloseButton from "./CloseButton.vue";
 import FocusContainer from "./FocusContainer.vue";
 import TimeInput from "./TimeInput.vue";
 
+import * as keys from "./keys.js";
 import { parseTime, formatTime } from "./util.js";
 
 export default {
@@ -127,6 +128,8 @@ export default {
     },
 
     onOpen() {
+      keys.pushContext("change-time-modal");
+
       this.selectedTime = formatTime(this.time);
 
       this.previousActiveElement = document.activeElement;
@@ -137,6 +140,8 @@ export default {
     },
 
     onClose() {
+      keys.popContext();
+
       if (this.previousActiveElement) {
         this.previousActiveElement.focus();
       }

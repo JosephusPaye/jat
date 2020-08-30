@@ -1,15 +1,27 @@
-let currentContextId;
+let contexts = [];
 const listeners = new Map();
 
-export function setContext(context) {
-  currentContextId = context;
+function currentContext() {
+  return contexts[Math.max(0, contexts.length - 1)];
+}
+
+export function setContext(contextId) {
+  contexts[Math.max(0, contexts.length - 1)] = contextId;
+}
+
+export function pushContext(contextId) {
+  contexts.push(contextId);
+}
+
+export function popContext() {
+  contexts.pop();
 }
 
 export function add(keyOrKeys, contextId, callback) {
   const keys = Array.isArray(keyOrKeys) ? keyOrKeys : [keyOrKeys];
 
   const onKeydown = event => {
-    if (keys.includes(event.key) && currentContextId === contextId) {
+    if (keys.includes(event.key) && currentContext() === contextId) {
       event.preventDefault();
       callback(event);
     }

@@ -11,7 +11,7 @@
       :length="timer.length"
       :allowOverflow="timer.allowOverflow"
       @done="onDone"
-      v-slot="{ time, state, isOverflowed }"
+      v-slot="{ time, state, isDone, isOverflowed }"
     >
       <div
         class="max-w-full min-w-4xl -mt-10 pt-4"
@@ -23,17 +23,25 @@
           <TimerView
             :time="time"
             :isOverflowed="isOverflowed"
+            :isDone="isDone"
             :showMilliseconds="timer.showMilliseconds"
             :zoomFactor="view.zoomFactor"
           />
 
-          <Button
-            class="mt-8"
-            title="Shortcut: t"
-            @click="showChangeTimeModal = true"
-          >
-            ✏ Change time
-          </Button>
+          <div class="mt-8 flex">
+            <div
+              class="inline-flex items-center px-4 rounded-l text-lg font-semibold border border-r-0 theme:border theme:text-primary"
+            >
+              {{ lengthFormatted }}
+            </div>
+            <Button
+              title="Shortcut: t"
+              class="rounded-l-none"
+              @click="showChangeTimeModal = true"
+            >
+              ✏ Change time
+            </Button>
+          </div>
         </div>
 
         <div class="flex justify-between mt-4">
@@ -126,6 +134,7 @@ import UseFullscreen from "./UseFullscreen.js";
 import { timerSound, loop } from "./sound.js";
 import { restore, persist } from "./storage.js";
 import * as keys from "./keys.js";
+import { formatTime } from "./util.js";
 
 export default {
   name: "App",
@@ -165,6 +174,12 @@ export default {
     data.view.isFullscreen = this.isFullscreen();
 
     return data;
+  },
+
+  computed: {
+    lengthFormatted() {
+      return formatTime(this.timer.length);
+    }
   },
 
   watch: {
@@ -362,7 +377,7 @@ export default {
 
     onDone() {
       if (this.timer.allowSound) {
-        this.stopTimerSound = loop(timerSound, 3);
+        this.stopTimerSound = loop(timerSound, 6);
       }
     }
   }
