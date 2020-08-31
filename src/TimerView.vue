@@ -4,7 +4,7 @@
     :class="{ 'is-overflowed': isOverflowed, flash: isDone }"
     :style="{ fontSize: `${zoomFactor * 32}px` }"
   >
-    <div class="leading-none" style="font-size: 4em">
+    <div class="leading-none font-mono" style="font-size: 4em">
       <span>{{ time.h }}</span>
       <span>:</span>
       <span>{{ time.m }}</span>
