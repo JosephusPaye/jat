@@ -1,6 +1,6 @@
 # Jat: Just a timer
 
-<img width="64px" height="64px" src="./jat.svg">
+<a href="https://jat.netlify.app"><img width="64px" height="64px" src="./jat.svg"></a>
 
 Jat is a beautifully simple countdown timer and stopwatch. <https://jat.netlify.app>
 
